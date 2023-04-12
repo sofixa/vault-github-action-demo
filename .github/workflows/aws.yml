@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+      - dev
+name: Deploy on AWS
+env:
+  vaultURL: https://vault-cluster-paris-day-public-vault-3c0c0458.c22eb206.z1.hashicorp.cloud:8200
+  vaultNamespace: admin
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    name: Get API 
+    permissions:
+        contents: read
+        id-token: write
+    steps:
+            - name: Import Secrets
+              id: import-secrets
+              uses: hashicorp/vault-action@v2
+              with:
+                url: ${{ env.vaultURL }}
+                role: ${{ github.ref }}
+                method: jwt
+                jwtGithubAudience: sigstore # set the GitHub token's aud claim
+                namespace: ${{ env.vaultNamespace }}
+                secrets: |
+                    secret/data/${{ github.ref_name }}/api api_key| API_KEY ;
+                    secret/data/${{ github.ref_name }}/api api_url | API_URL ;
+            - name: 
+              run: |
+                API_KEY = "${{ env.API_KEY }}"
+                API_URL = "${{ env.API_URL }}"
