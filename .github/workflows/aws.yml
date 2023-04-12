@@ -21,7 +21,7 @@ jobs:
               uses: hashicorp/vault-action@v2
               with:
                 url: ${{ env.vaultURL }}
-                role: vault-github-action-demo-${{ github.ref }}
+                role: vault-github-action-demo-${{ github.ref_name }}
                 method: jwt
                 path: ${{ env.vaultPath }}
                 jwtGithubAudience: sigstore # set the GitHub token's aud claim
