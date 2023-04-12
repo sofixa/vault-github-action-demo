@@ -27,10 +27,11 @@ jobs:
                 jwtGithubAudience: sigstore # set the GitHub token's aud claim
                 namespace: ${{ env.vaultNamespace }}
                 secrets: |
-                    secret/data/${{ github.ref_name }}/api api_key| API_KEY ;
-                    secret/data/${{ github.ref_name }}/api api_url | API_URL ;
+                    secret/data/${{ github.ref_name }}/api api_key | API_KEY ;
+                    secret/data/${{ github.ref_name }}/api api_url | API_URL 
             - name: Use
               run: |
+                echo ${{ env.API_KEY }}
                 API_KEY = "${{ env.API_KEY }}"
                 API_URL = "${{ env.API_URL }}"
                 curl -H "Key: $API_KEY" $API_URL
