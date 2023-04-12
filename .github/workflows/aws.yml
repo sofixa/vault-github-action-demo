@@ -6,6 +6,7 @@ on:
 name: Deploy on AWS
 env:
   vaultURL: https://vault-cluster-paris-day-public-vault-3c0c0458.c22eb206.z1.hashicorp.cloud:8200
+  vaultPath: github
   vaultNamespace: admin
 jobs:
   hello:
@@ -20,8 +21,9 @@ jobs:
               uses: hashicorp/vault-action@v2
               with:
                 url: ${{ env.vaultURL }}
-                role: ${{ github.ref }}
+                role: vault-github-action-demo-${{ github.ref }}
                 method: jwt
+                path: ${{ env.vaultPath }}
                 jwtGithubAudience: sigstore # set the GitHub token's aud claim
                 namespace: ${{ env.vaultNamespace }}
                 secrets: |
