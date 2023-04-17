@@ -1,0 +1,9 @@
+# Read-only permission on 'secret/data/production/*' path
+
+path "secret/data/main/*" {
+  capabilities = ["read"]
+}
+
+path "aws/creds/main" {
+    capabilities = ["read"]
+}

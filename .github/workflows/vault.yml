@@ -3,9 +3,9 @@ on:
     branches:
       - main 
       - dev
-name: Deploy on AWS
+name: Vault
 env:
-  vaultURL: https://vault-cluster-paris-day-public-vault-3c0c0458.c22eb206.z1.hashicorp.cloud:8200
+  vaultURL: https://my-vault-cluster.hashicorp.cloud:8200
   vaultPath: github
   vaultNamespace: admin
 jobs:
