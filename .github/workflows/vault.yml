@@ -1,0 +1,40 @@
+on:
+  push:
+    branches:
+      - main 
+      - dev
+name: Vault
+env:
+  vaultURL: https://my-vault-cluster.hashicorp.cloud:8200
+  vaultPath: github
+  vaultNamespace: admin
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    name: Get API 
+    permissions:
+        contents: read
+        id-token: write
+    steps:
+        - name: Get Secrets
+          id: import-secrets
+          uses: hashicorp/vault-action@v2
+          with:
+            url: ${{ env.vaultURL }}
+            role: vault-github-action-demo-${{ github.ref_name }}
+            method: jwt
+            path: ${{ env.vaultPath }}
+            jwtGithubAudience: sigstore # set the GitHub token's aud claim
+            namespace: ${{ env.vaultNamespace }}
+            secrets: |
+              secret/data/${{ github.ref_name }}/api api_key | API_KEY ;
+              secret/data/${{ github.ref_name }}/api api_url | API_URL 
+        - name: Use
+          run: |
+            echo ${{ env.API_KEY }}
+        - name: Revoke token
+          # This step always runs at the end regardless of the previous steps result
+          if: always()
+          run: |
+            curl -X POST -sv -H "X-Vault-Token: ${{ env.VAULT_TOKEN }}" \
+            ${{ env.vaultURL }}/v1/auth/token/revoke-self
